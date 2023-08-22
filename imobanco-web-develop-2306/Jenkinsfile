@@ -1,0 +1,26 @@
+pipeline{
+    agent none
+    stages {
+        stage('Build') {
+            agent {
+                docker {
+                    image 'node:18'
+                }
+            }
+            steps {
+                sh 'yarn install'
+                sh 'yarn build'
+
+                archiveArtifacts artifacts: 'dist/'
+            }
+        }
+        stage('Deploy') {
+            agent any
+            steps {
+                build job: 'frontend-deploy', wait: true, parameters: [
+                    string(name: 'frontend_build', value: "<SpecificBuildSelector><buildNumber>${BUILD_NUMBER}</buildNumber></SpecificBuildSelector>")
+                ]
+            }
+        }
+    }
+}

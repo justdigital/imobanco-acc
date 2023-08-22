@@ -1,0 +1,27 @@
+# compiled output
+/dist
+/tmp
+/target
+/.mysql-data
+
+# IDEs and editors
+/.idea
+
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.classpath
+*.settings
+*.project
+*.mvn
+target
+
+
+

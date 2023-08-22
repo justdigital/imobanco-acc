@@ -1,0 +1,37 @@
+#ver/home/tqi_rdouglas/dev/S4Y/JAVA/minha-utilizacao/api-passaportesion: '3.6'
+
+# TODO: mysql error: --initialize specified but the data directory has files in it. Aborting.
+services:
+  keycloak_db: # Service name
+    image: mysql:5.7.24
+    volumes:
+      - keycloak_volume:/var/lib/mysql
+    environment:
+      MYSQL_DB: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - 3333:3333
+  keycloak:
+    image: quay.io/keycloak/keycloak
+    environment:
+      DB_VENDOR: MYSQL
+      DB_ADDR: localhost
+      DB_DATABASE: keycloak_db
+      DB_USER: keycloak
+      DB_SCHEMA: public
+      DB_PASSWORD: keycloak
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      JAVA_OPTS:
+      KEYCLOAK_LOGLEVEL: DEBUG
+      ROOT_LOGLEVEL: DEBUG
+    command:
+      - start-dev
+    ports:
+      - 8080:8080
+    depends_on:
+      - keycloak_db
+volumes:
+  keycloak_volume:

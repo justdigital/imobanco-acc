@@ -1,0 +1,164 @@
+# Create schemas
+
+# Create tables
+# Create tables
+CREATE TABLE IF NOT EXISTS proc_onboard
+(
+    id INT NOT NULL,
+    cd_tipo_proc SMALLINT NOT NULL,
+    ts_inicio DATETIME,
+    ts_fim DATETIME,
+    cd_status VARCHAR(2) NOT NULL,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS ativ_onboard
+(
+    id INT NOT NULL,
+    cd_tipo_ativ_onb SMALLINT NOT NULL,
+    id_proc_onb INT NOT NULL,
+    ts_inicio DATETIME NOT NULL,
+    ts_fim DATETIME,
+    cd_status VARCHAR(2) NOT NULL,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS tipo_proc_onboard
+(
+    cd_tipo_proc SMALLINT NOT NULL,
+    ds_tipo_proc VARCHAR(10) NOT NULL UNIQUE,
+    PRIMARY KEY(cd_tipo_proc)
+);
+
+CREATE TABLE IF NOT EXISTS tipo_ativ_proc_onb
+(
+    cd_tipo_ativ_onb SMALLINT NOT NULL,
+    ds_tipo_ativ_onb VARCHAR(10) NOT NULL UNIQUE,
+    PRIMARY KEY(cd_tipo_ativ_onb)
+);
+
+CREATE TABLE IF NOT EXISTS cadastro_pf
+(
+    id_cadastro INT NOT NULL,
+    id_usu_keycloak VARCHAR(48) UNIQUE,
+    ts_criacao DATETIME,
+    nm_usu VARCHAR(60) NOT NULL,
+    no_cpf_usu VARCHAR(11) UNIQUE,
+    nm_mae VARCHAR(60) NOT NULL,
+    dt_nasc DATE NOT NULL,
+    email_usu VARCHAR(30) NOT NULL UNIQUE,
+    no_fone_usu VARCHAR(13) NOT NULL UNIQUE,
+    no_ddd_fone_usu VARCHAR(2),
+    cd_genero_usu SMALLINT,
+    nm_logradouro VARCHAR(40) NOT NULL,
+    no_endereco VARCHAR(10),
+    no_cep VARCHAR(8),
+    ds_comp_end VARCHAR(20),
+    cd_pep TINYINT(1) DEFAULT false NOT NULL,
+    cd_aceite_termo TINYINT(1) DEFAULT true NOT NULL,
+    PRIMARY KEY(id_cadastro)
+);
+
+CREATE TABLE IF NOT EXISTS status_ativ_onb
+(
+    cd_status VARCHAR(2) NOT NULL,
+    ds_status VARCHAR(15) NOT NULL UNIQUE,
+    PRIMARY KEY(cd_status)
+);
+
+CREATE TABLE IF NOT EXISTS cadastro
+(
+    id_cadastro INT NOT NULL,
+    id_proc_onb INT NOT NULL,
+    cd_tipo_usu SMALLINT NOT NULL,
+    cd_situacao SMALLINT NOT NULL,
+    PRIMARY KEY(id_cadastro)
+);
+
+CREATE TABLE IF NOT EXISTS tipo_usuario
+(
+    cd_tipo_usu SMALLINT NOT NULL,
+    ds_tipo_usu VARCHAR(12) NOT NULL UNIQUE,
+    PRIMARY KEY(cd_tipo_usu)
+);
+
+CREATE TABLE IF NOT EXISTS genero_usu_pf
+(
+    cd_genero_usu SMALLINT NOT NULL,
+    ds_genero_usu VARCHAR(12) NOT NULL UNIQUE,
+    PRIMARY KEY(cd_genero_usu)
+);
+
+CREATE TABLE IF NOT EXISTS status_proc_onb
+(
+    cd_status VARCHAR(2) NOT NULL,
+    ds_status VARCHAR(10) UNIQUE,
+    PRIMARY KEY(cd_status)
+);
+
+CREATE TABLE IF NOT EXISTS audit
+(
+    id INT NOT NULL,
+    ts_audit DATETIME NOT NULL,
+    cd_audit SMALLINT,
+    id_cadastro INT,
+    ds_audit VARCHAR(40),
+    PRIMARY KEY(id)
+);
+
+
+# Create FKs
+ALTER TABLE proc_onboard
+    ADD CONSTRAINT FK_fk_proc_tipo_proc
+    FOREIGN KEY (cd_tipo_proc)
+    REFERENCES tipo_proc_onboard(cd_tipo_proc)
+;
+    
+ALTER TABLE ativ_onboard
+    ADD    FOREIGN KEY (cd_tipo_ativ_onb)
+    REFERENCES tipo_ativ_proc_onb(cd_tipo_ativ_onb)
+;
+    
+ALTER TABLE ativ_onboard
+    ADD CONSTRAINT FK_fk_proc_ativ_onb
+    FOREIGN KEY (id_proc_onb)
+    REFERENCES proc_onboard(id)
+;
+    
+ALTER TABLE ativ_onboard
+    ADD    FOREIGN KEY (cd_status)
+    REFERENCES status_ativ_onb(cd_status)
+;
+    
+ALTER TABLE cadastro
+    ADD CONSTRAINT FK_fk_cadastro_tipo_usu
+    FOREIGN KEY (cd_tipo_usu)
+    REFERENCES tipo_usuario(cd_tipo_usu)
+;
+    
+ALTER TABLE cadastro
+    ADD CONSTRAINT FK_fk_cadastro_proc_onb
+    FOREIGN KEY (id_proc_onb)
+    REFERENCES proc_onboard(id)
+;
+    
+ALTER TABLE cadastro
+    ADD CONSTRAINT FK_fk_cadastro_cadastro_pf
+    FOREIGN KEY (id_cadastro)
+    REFERENCES cadastro_pf(id_cadastro)
+;
+    
+ALTER TABLE cadastro_pf
+    ADD    FOREIGN KEY (cd_genero_usu)
+    REFERENCES genero_usu_pf(cd_genero_usu)
+;
+    
+ALTER TABLE proc_onboard
+    ADD    FOREIGN KEY (cd_status)
+    REFERENCES status_proc_onb(cd_status)
+;
+    
+
+# Create Indexes
+
+

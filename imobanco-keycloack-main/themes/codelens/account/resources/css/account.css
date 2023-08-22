@@ -1,0 +1,24 @@
+:root {
+    --pf-global--BackgroundColor--dark-100: #18202b;
+    --pf-global--BackgroundColor--dark-300: #253141;
+    --pf-global--BackgroundColor--dark-400: #2e3b4d;
+    --pf-global--active-color--100: #06c;
+}
+
+.pf-c-dropdown__toggle:before {
+    border: none;
+    border-bottom: 2px solid;
+    border-bottom-color: var(--pf-global--active-color--100);
+}
+
+.pf-c-nav__section-title {
+    border-bottom-color: var(--pf-global--BackgroundColor--dark-100)
+}
+
+.pf-c-nav .pf-c-divider {
+    --pf-c-divider--after--BackgroundColor: var(--pf-global--BackgroundColor--dark-100);
+}
+
+#spinner_screen div .brand {
+    display: none !important;
+}
